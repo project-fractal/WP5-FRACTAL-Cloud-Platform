@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cache
+  namespace: mlbuffet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlbuffet_cache
+  template:
+    metadata:
+      labels:
+        app: mlbuffet_cache
+    spec:
+      containers:
+        - name: cache
+          image: IMAGE_MLBUFFET_CACHE
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 6379
+      imagePullSecrets:
+        - name: fractalregistry
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cache
+  namespace: mlbuffet
+spec:
+  selector:
+    app: mlbuffet_cache
+  ports:
+  - protocol: TCP
+    port: 6379
+    targetPort: 6379
+  type: ClusterIP

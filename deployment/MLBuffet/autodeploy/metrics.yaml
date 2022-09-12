@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metrics
+  namespace: mlbuffet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlbuffet_metrics
+  template:
+    metadata:
+      labels:
+        app: mlbuffet_metrics
+    spec:
+      containers:
+      - name: metrics
+        image: IMAGE_MLBUFFET_METRICS
+        imagePullPolicy: Always
+        ports: 
+        - containerPort: 9090
+      imagePullSecrets:
+        - name: fractalregistry
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: metrics
+  namespace: mlbuffet
+spec:
+  selector:
+    app: mlbuffet_metrics
+  ports:
+  - protocol: TCP
+    port: 9090
+    targetPort: 9090
+  type: ClusterIP

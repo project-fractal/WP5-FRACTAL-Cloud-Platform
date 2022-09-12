@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: mlbuffet
+
+resources:
+  - mlbuffet_namespace.yaml
+  - rbac.yaml
+  - inferrer.yaml
+  - cache.yaml
+  - metrics.yaml
+  - storage.yaml
+
+images:
+  # Inferrer image name
+  - name: IMAGE_MLBUFFET_INFERRER
+    newName: vtwkpdos.gra7.container-registry.ovh.net/fractal/mlbuffet_inferrer:v2
+  # Cache image name
+  - name: IMAGE_MLBUFFET_CACHE
+    newName: vtwkpdos.gra7.container-registry.ovh.net/fractal/mlbuffet_cache:v2
+  # Metrics image name
+  - name: IMAGE_MLBUFFET_METRICS
+    newName: vtwkpdos.gra7.container-registry.ovh.net/fractal/mlbuffet_metrics:v2
+  # Storage image name
+  - name: IMAGE_MLBUFFET_STORAGE
+    newName: vtwkpdos.gra7.container-registry.ovh.net/fractal/mlbuffet_storage:v2

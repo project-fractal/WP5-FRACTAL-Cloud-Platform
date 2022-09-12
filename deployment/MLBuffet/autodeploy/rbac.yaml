@@ -1,0 +1,72 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: schedule-modelhosts
+  namespace: mlbuffet
+rules:
+  - apiGroups: ["apps",""]
+    resources: ["pods","deployments","services"]
+    verbs:
+      - get
+      - list
+      - delete
+      - create
+      - patch
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: modelhost-rolebinding
+  namespace: mlbuffet
+subjects:
+  - kind: ServiceAccount
+    name: modelhost-creator
+roleRef:
+  kind: Role
+  name: schedule-modelhosts
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: modelhost-creator
+  namespace: mlbuffet
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: trainer-apoptosis
+  namespace: mlbuffet
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs:
+      - delete
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: trainer-rb
+  namespace: mlbuffet
+subjects:
+  - kind: ServiceAccount
+    name: trainer-sa
+roleRef:
+  kind: Role
+  name: trainer-apoptosis
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: trainer-sa
+  namespace: mlbuffet

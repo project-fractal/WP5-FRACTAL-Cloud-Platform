@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inferrer
+  namespace: mlbuffet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlbuffet_inferrer
+  template:
+    metadata:
+      labels:
+        app: mlbuffet_inferrer
+    spec:
+      serviceAccountName: modelhost-creator  
+      containers:
+        - name: inferrer
+          image: vtwkpdos.gra7.container-registry.ovh.net/fractal/mlbuffet_inferrer:v2 
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: TRAINER_MANAGER
+              value: KUBERNETES
+            - name: IMAGE_MLBUFFET_TRAINER
+              value: vtwkpdos.gra7.container-registry.ovh.net/fractal/mlbuffet_trainer:v2
+            - name: IMAGE_MLBUFFET_MODELHOST
+              value: vtwkpdos.gra7.container-registry.ovh.net/fractal/mlbuffet_modelhost:v2
+      imagePullSecrets:
+        - name: fractalregistry
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: inferrer
+  namespace: mlbuffet
+spec:
+  selector:
+    app: mlbuffet_inferrer
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+  type: NodePort
+
