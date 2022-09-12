@@ -85,6 +85,16 @@ For exposing MLBuffet, the [ingress-mlbuffet.yml](../../deployment/MLBuffet/ingr
 kubectl apply ingress-mlbuffet.yml
 ```
 
+
+#### Creating fractalregistry secret
+The _fractalregistry_ secret can be created with the following command, where _docker_config.json_ file is 
+the file containing the credentials of the robot account that will be used to access the container registry.
+
+
+```bash
+kubectl create secret generic fractalregistry --from-file=.dockerconfigjson=./docker_config.json --type=kubernetes.io/dockerconfigjson
+```
+
 ### Using MLBuffet
 MLBuffet API will be exposed at https://fractal.ik-europe.eu/mlbuffet/api/v1/. To test that MLBuffet has been
 deployed properly, the following endpoint can be accessed:
